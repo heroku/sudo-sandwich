@@ -1,7 +1,18 @@
 module Heroku
   class ResourcesController < ActionController::API
     def create
-      render json: {}, status: 202
+      heroku_uuid = params[:id]
+
+      render(
+        json: {
+          id: heroku_uuid,
+          config: {
+            RAD_ON_ADD_ON: "tubular!"
+          },
+          message: "Thanks for being rad and adding the rad-on add-on."
+        },
+        status: 202
+      )
     end
   end
 end

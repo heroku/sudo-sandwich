@@ -1,5 +1,5 @@
 module Heroku
-  class ResourcesController < ActionController::API
+  class ResourcesController < ApplicationController
     def create
       heroku_uuid = params[:id]
 

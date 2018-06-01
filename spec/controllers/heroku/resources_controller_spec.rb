@@ -3,12 +3,15 @@ require 'rails_helper'
 RSpec.describe Heroku::ResourcesController do
   describe 'POST /heroku/resources' do
     it 'returns a 202' do
+      http_login(ENV['SLUG'], ENV['PASSWORD'])
+
       post :create
 
       expect(response.code).to eq("202")
     end
 
     it 'returns the correct json response' do
+      http_login(ENV['SLUG'], ENV['PASSWORD'])
       heroku_uuid = "123-ABC-456-DEF",
       expected_response = {
         id: heroku_uuid,

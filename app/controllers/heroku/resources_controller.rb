@@ -14,5 +14,9 @@ module Heroku
         status: 202
       )
     end
+
+    def destroy
+      render status: 204
+    end
   end
 end

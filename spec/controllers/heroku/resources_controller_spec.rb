@@ -25,9 +25,19 @@ RSpec.describe Heroku::ResourcesController do
 
       expect(parsed_response_body).to eq(expected_response)
     end
+  end
+
+  describe 'POST /heroku/resources' do
+    it 'returns a 204' do
+      http_login(ENV['SLUG'], ENV['PASSWORD'])
+
+      delete :destroy, params: { "id" => "123-ABC" }
+
+      expect(response.code).to eq("204")
+    end
+  end
 
     def parsed_response_body
       JSON.parse(response.body, symbolize_names: true)
     end
-  end
 end

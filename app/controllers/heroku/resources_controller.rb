@@ -11,7 +11,7 @@ module Heroku
           },
           message: "Thanks for being rad and adding the rad-on add-on."
         },
-        status: 202
+        status: 200
       )
     end
 

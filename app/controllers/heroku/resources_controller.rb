@@ -1,7 +1,7 @@
 module Heroku
   class ResourcesController < ApplicationController
     def create
-      heroku_uuid = params[:id]
+      heroku_uuid = params[:uuid]
 
       render(
         json: {

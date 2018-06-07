@@ -12,7 +12,7 @@ RSpec.describe Heroku::ResourcesController do
 
     it 'returns the correct json response' do
       http_login(ENV['SLUG'], ENV['PASSWORD'])
-      heroku_uuid = "123-ABC-456-DEF",
+      heroku_uuid = "123-ABC-456-DEF"
       expected_response = {
         id: heroku_uuid,
         config: {

@@ -7,9 +7,9 @@ module Heroku
         json: {
           id: heroku_uuid,
           config: {
-            RADON_ADD_ON: "tubular!"
+            SUDO_SANDWICH_COMMAND: "Make me a PB&J!"
           },
-          message: "Thanks for being rad and adding the rad-on add-on."
+          message: "Thanks for using Sudo Sandwich."
         },
         status: 200
       )

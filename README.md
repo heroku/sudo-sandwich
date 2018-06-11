@@ -1,4 +1,4 @@
-# Rad-on is a rad add-on
+# Sudo Sandwich is an example Heroku Add-on
 
 Example Heroku add-on built with Rails for the Add-on Partner API v3.
 

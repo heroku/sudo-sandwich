@@ -16,9 +16,9 @@ RSpec.describe Heroku::ResourcesController do
       expected_response = {
         id: heroku_uuid,
         config: {
-          RADON_ADD_ON: "tubular!"
+          SUDO_SANDWICH_COMMAND: "Make me a PB&J!"
         },
-        message: "Thanks for being rad and adding the rad-on add-on."
+        message: "Thanks for using Sudo Sandwich."
       }
 
       post :create, params: { "uuid" => heroku_uuid }

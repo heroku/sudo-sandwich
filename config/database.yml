@@ -5,11 +5,11 @@ default: &default
 
 development:
   <<: *default
-  database: rad_on_development
+  database: sudo_sandwich_development
 
 test:
   <<: *default
-  database: rad_on_test
+  database: sudo_sandwich_test
 
 production:
   adapter: postgresql

@@ -12,6 +12,7 @@ gem 'rails', '~> 5.1.1'
 gem 'pg'
 gem 'puma', '~> 3.7'
 gem 'dotenv-rails'
+gem 'attr_encrypted', '~> 3.0.0'
 
 group :development, :test do
   gem 'pry-rails'

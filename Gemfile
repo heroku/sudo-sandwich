@@ -13,6 +13,7 @@ gem 'pg'
 gem 'puma', '~> 3.7'
 gem 'dotenv-rails'
 gem 'attr_encrypted', '~> 3.0.0'
+gem 'delayed_job_active_record'
 
 group :development, :test do
   gem 'pry-rails'

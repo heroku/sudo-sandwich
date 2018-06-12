@@ -13,13 +13,16 @@ Install [Homebrew].
 
 Install [Heroku CLI].
 
-`brew install heroku/brew/heroku`
+```
+brew install heroku/brew/heroku
+```
 
 Install and start PostgreSQL.
 
-`brew install postgresql`
-
-`brew services start postgresql`
+```
+brew install postgresql
+brew services start postgresql
+```
 
 [Homebrew]: https://brew.sh/
 [Heroku CLI]: https://devcenter.heroku.com/articles/heroku-cli

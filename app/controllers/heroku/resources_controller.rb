@@ -1,6 +1,7 @@
 module Heroku
   class ResourcesController < ApplicationController
     def create
+      logger.debug("RAW REQUEST BODY: #{request.raw_post}")
       heroku_uuid = params[:uuid]
       oauth_grant_code = params[:oauth_grant][:code]
 

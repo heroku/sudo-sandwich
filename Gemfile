@@ -14,6 +14,7 @@ gem 'puma', '~> 3.7'
 gem 'dotenv-rails'
 gem 'attr_encrypted', '~> 3.0.0'
 gem 'delayed_job_active_record'
+gem 'rest-client'
 
 group :development, :test do
   gem 'pry-rails'
@@ -25,5 +26,6 @@ end
 
 group :test do
   gem 'rspec-rails', '~> 3.6'
+  gem 'sinatra'
   gem 'webmock'
 end

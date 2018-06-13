@@ -10,6 +10,12 @@ module Heroku
         oauth_grant_code: oauth_grant_code,
       )
 
+      # will be done in a background job once we have jobs set up (very soon)
+      GrantCodeExchanger.new(
+        heroku_uuid: heroku_uuid,
+        oauth_grant_code: oauth_grant_code,
+      ).run
+
       render(
         json: {
           id: heroku_uuid,

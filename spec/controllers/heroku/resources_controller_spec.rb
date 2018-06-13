@@ -4,6 +4,7 @@ RSpec.describe Heroku::ResourcesController do
   describe 'POST /heroku/resources' do
     it 'returns a 200' do
       http_login(ENV['SLUG'], ENV['PASSWORD'])
+      stub_grant_code_exchanger
 
       post :create, params: {
         'uuid' => '123ABC',
@@ -17,6 +18,7 @@ RSpec.describe Heroku::ResourcesController do
 
     it 'returns the correct json response' do
       http_login(ENV['SLUG'], ENV['PASSWORD'])
+      stub_grant_code_exchanger
       heroku_uuid = '123-ABC-456-DEF'
       expected_response = {
         id: heroku_uuid,
@@ -38,6 +40,7 @@ RSpec.describe Heroku::ResourcesController do
 
     it 'saves the encrypted oauth grant code' do
       http_login(ENV['SLUG'], ENV['PASSWORD'])
+      stub_grant_code_exchanger
       heroku_uuid = '123-ABC-456-DEF'
       code = 'supersecretcode'
 
@@ -57,6 +60,7 @@ RSpec.describe Heroku::ResourcesController do
   describe 'POST /heroku/resources' do
     it 'returns a 204' do
       http_login(ENV['SLUG'], ENV['PASSWORD'])
+      stub_grant_code_exchanger
       heroku_uuid = '123-ABC'
       sandwich = double(destroy!: true)
       allow(Sandwich).to receive(:find_by).with(heroku_uuid: heroku_uuid).and_return(sandwich)
@@ -68,6 +72,7 @@ RSpec.describe Heroku::ResourcesController do
 
     it 'deletes the associated sandwich record' do
       http_login(ENV['SLUG'], ENV['PASSWORD'])
+      stub_grant_code_exchanger
       heroku_uuid = '123-ABC'
       Sandwich.create!(heroku_uuid: heroku_uuid)
 
@@ -79,7 +84,12 @@ RSpec.describe Heroku::ResourcesController do
     end
   end
 
-    def parsed_response_body
-      JSON.parse(response.body, symbolize_names: true)
-    end
+  def parsed_response_body
+    JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def stub_grant_code_exchanger
+    exchanger_double = double(run: true)
+    allow(GrantCodeExchanger).to receive(:new).and_return(exchanger_double)
+  end
 end

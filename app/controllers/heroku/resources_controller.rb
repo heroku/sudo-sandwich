@@ -10,10 +10,10 @@ module Heroku
         oauth_grant_code: oauth_grant_code,
       )
 
-      GrantCodeExchanger.new(
+      ExchangeGrantTokenJob.perform_later(
         heroku_uuid: heroku_uuid,
         oauth_grant_code: oauth_grant_code,
-      ).run
+      )
 
       render(
         json: {

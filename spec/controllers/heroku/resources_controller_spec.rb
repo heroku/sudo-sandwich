@@ -55,6 +55,25 @@ RSpec.describe Heroku::ResourcesController do
 
       expect(sandwich.oauth_grant_code).to eq(code)
     end
+
+    it 'enqueues the ExchangeGrantTokenJob' do
+      http_login(ENV['SLUG'], ENV['PASSWORD'])
+      stub_grant_code_exchanger
+      heroku_uuid = '123-ABC-456-DEF'
+      code = 'supersecretcode'
+
+      post :create, params: {
+        'uuid' => heroku_uuid,
+        'oauth_grant': {
+          'code': code
+        }
+      }
+
+      sandwich = Sandwich.find_by(heroku_uuid: heroku_uuid)
+
+      expect(ExchangeGrantTokenJob).to have_received(:perform_later).
+        with(heroku_uuid: heroku_uuid, oauth_grant_code: code)
+    end
   end
 
   describe 'POST /heroku/resources' do
@@ -89,7 +108,6 @@ RSpec.describe Heroku::ResourcesController do
   end
 
   def stub_grant_code_exchanger
-    exchanger_double = double(run: true)
-    allow(GrantCodeExchanger).to receive(:new).and_return(exchanger_double)
+    allow(ExchangeGrantTokenJob).to receive(:perform_later)
   end
 end

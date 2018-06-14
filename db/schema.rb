@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180612214514) do
+ActiveRecord::Schema.define(version: 20180614004436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,11 @@ ActiveRecord::Schema.define(version: 20180612214514) do
     t.string "heroku_uuid", null: false
     t.string "encrypted_oauth_grant_code"
     t.string "encrypted_oauth_grant_code_iv"
+    t.string "encrypted_access_token"
+    t.string "encrypted_access_token_iv"
+    t.string "encrypted_refresh_token"
+    t.string "encrypted_refresh_token_iv"
+    t.datetime "access_token_expires_at"
   end
 
 end

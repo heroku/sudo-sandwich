@@ -9,6 +9,11 @@ module Heroku
         oauth_grant_code: oauth_grant_code,
       )
 
+      ExchangeGrantTokenJob.perform_later(
+        heroku_uuid: heroku_uuid,
+        oauth_grant_code: oauth_grant_code,
+      )
+
       render(
         json: {
           id: heroku_uuid,

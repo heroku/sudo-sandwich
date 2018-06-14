@@ -21,7 +21,7 @@ class GrantCodeExchanger
   attr_reader :heroku_uuid, :oauth_grant_code, :client_secret
 
   def sandwich
-    @_sandwich ||= Sandwich.find_by(heroku_uuid: heroku_uuid)
+    Sandwich.find_by(heroku_uuid: heroku_uuid)
   end
 
   def response_body
@@ -29,7 +29,7 @@ class GrantCodeExchanger
   end
 
   def response
-    @_response ||= Excon.new(BASE_URL).post(
+    Excon.new(BASE_URL).post(
       path: "/oauth/token",
       params: {
         code: oauth_grant_code,

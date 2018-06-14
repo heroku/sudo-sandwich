@@ -8,6 +8,7 @@ RSpec.describe Heroku::ResourcesController do
 
       post :create, params: {
         'uuid' => '123ABC',
+        'plan' => 'test',
         'oauth_grant': {
           'code': 'supersecretcode'
         }
@@ -30,6 +31,7 @@ RSpec.describe Heroku::ResourcesController do
 
       post :create, params: {
         'uuid' => heroku_uuid,
+        'plan' => 'pbj',
         'oauth_grant': {
           'code': 'sekret'
         }
@@ -38,7 +40,7 @@ RSpec.describe Heroku::ResourcesController do
       expect(parsed_response_body).to eq(expected_response)
     end
 
-    it 'saves the encrypted oauth grant code' do
+    it 'saves the plan and encrypted oauth grant code' do
       http_login(ENV['SLUG'], ENV['PASSWORD'])
       stub_grant_code_exchanger
       heroku_uuid = '123-ABC-456-DEF'
@@ -46,6 +48,7 @@ RSpec.describe Heroku::ResourcesController do
 
       post :create, params: {
         'uuid' => heroku_uuid,
+        'plan' => 'pbj',
         'oauth_grant': {
           'code': code
         }
@@ -54,6 +57,39 @@ RSpec.describe Heroku::ResourcesController do
       sandwich = Sandwich.find_by(heroku_uuid: heroku_uuid)
 
       expect(sandwich.oauth_grant_code).to eq(code)
+      expect(sandwich.plan).to eq('pbj')
+    end
+  end
+
+  describe 'PUT /heroku/resources' do
+    it 'changes the plan for the heroku_uuid passed in' do
+      http_login(ENV['SLUG'], ENV['PASSWORD'])
+      heroku_uuid = '123-ABC-456-DEF'
+      old_plan = "pbj"
+      new_plan = "blt"
+      sandwich = Sandwich.create(heroku_uuid: heroku_uuid, plan: old_plan)
+
+      put :update, params: { id: heroku_uuid, plan: new_plan }
+
+      expect(sandwich.reload.plan).to eq new_plan
+    end
+
+    it 'returns the expected response' do
+      http_login(ENV['SLUG'], ENV['PASSWORD'])
+      heroku_uuid = '123-ABC-456-DEF'
+      old_plan = "pbj"
+      new_plan = "blt"
+      Sandwich.create(heroku_uuid: heroku_uuid, plan: old_plan)
+      expected_response = {
+        config: {
+          SUDO_SANDWICH_COMMAND: 'Make me a BLT!'
+        },
+        message: 'Successfully changed from pbj to blt'
+      }
+
+      put :update, params: { id: heroku_uuid, plan: new_plan }
+
+      expect(parsed_response_body).to eq(expected_response)
     end
 
     it 'enqueues the ExchangeGrantTokenJob' do

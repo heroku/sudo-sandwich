@@ -6,4 +6,6 @@ class Sandwich < ActiveRecord::Base
   attr_encrypted :oauth_grant_code, key: ENV['ENCRYPTION_KEY']
   attr_encrypted :access_token, key: ENV['ENCRYPTION_KEY']
   attr_encrypted :refresh_token, key: ENV['ENCRYPTION_KEY']
+
+  enum plan: [:test, :pbj, :blt]
 end

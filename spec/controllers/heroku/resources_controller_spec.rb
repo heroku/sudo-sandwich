@@ -69,8 +69,6 @@ RSpec.describe Heroku::ResourcesController do
         }
       }
 
-      sandwich = Sandwich.find_by(heroku_uuid: heroku_uuid)
-
       expect(ExchangeGrantTokenJob).to have_received(:perform_later).
         with(heroku_uuid: heroku_uuid, oauth_grant_code: code)
     end

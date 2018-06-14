@@ -9,20 +9,10 @@ class GrantCodeExchanger
   end
 
   def run
-    response = Excon.new(BASE_URL).post(
-      path: "/oauth/token",
-      params: {
-        code: oauth_grant_code,
-        grant_type: GRANT_TYPE,
-        client_secret: client_secret,
-      }
-    )
-
-    body = JSON.parse(response.body, symbolize_names: true)
-
     sandwich.update!(
-      access_token: body[:access_token],
-      refresh_token: body[:refresh_token],
+      access_token: response_body[:access_token],
+      refresh_token: response_body[:refresh_token],
+      access_token_expires_at: expires_at
     )
   end
 
@@ -34,7 +24,22 @@ class GrantCodeExchanger
     @_sandwich ||= Sandwich.find_by(heroku_uuid: heroku_uuid)
   end
 
-  def connection
-    Excon.new(BASE_URL)
+  def response_body
+    @_response_body ||= JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def response
+    @_response ||= Excon.new(BASE_URL).post(
+      path: "/oauth/token",
+      params: {
+        code: oauth_grant_code,
+        grant_type: GRANT_TYPE,
+        client_secret: client_secret,
+      }
+    )
+  end
+
+  def expires_at
+    Time.now.utc + response_body[:expires_in]
   end
 end

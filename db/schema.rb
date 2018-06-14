@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180612235002) do
+ActiveRecord::Schema.define(version: 20180614004436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20180612235002) do
     t.string "encrypted_access_token_iv"
     t.string "encrypted_refresh_token"
     t.string "encrypted_refresh_token_iv"
+    t.datetime "access_token_expires_at"
   end
 
 end

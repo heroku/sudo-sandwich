@@ -77,8 +77,8 @@ RSpec.describe Heroku::ResourcesController do
     it 'returns the expected response' do
       http_login(ENV['SLUG'], ENV['PASSWORD'])
       heroku_uuid = '123-ABC-456-DEF'
-      old_plan = "pbj"
-      new_plan = "blt"
+      old_plan = 'pbj'
+      new_plan = 'blt'
       Sandwich.create(heroku_uuid: heroku_uuid, plan: old_plan)
       expected_response = {
         config: {
@@ -100,6 +100,7 @@ RSpec.describe Heroku::ResourcesController do
 
       post :create, params: {
         'uuid' => heroku_uuid,
+        'plan' => 'pbj',
         'oauth_grant': {
           'code': code
         }
@@ -127,7 +128,7 @@ RSpec.describe Heroku::ResourcesController do
       http_login(ENV['SLUG'], ENV['PASSWORD'])
       stub_grant_code_exchanger
       heroku_uuid = '123-ABC'
-      Sandwich.create!(heroku_uuid: heroku_uuid)
+      Sandwich.create!(heroku_uuid: heroku_uuid, plan: 'test')
 
       delete :destroy, params: { 'id' => heroku_uuid }
 

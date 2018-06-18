@@ -1,11 +1,5 @@
 module Heroku
   class ResourcesController < ApplicationController
-    PLAN_COMMANDS = {
-      "test" => "This is a test",
-      "pbj" => "Make me a PB&J!",
-      "blt" => "Make me a BLT!",
-    }
-
     def create
       heroku_uuid = params[:uuid]
       oauth_grant_code = params[:oauth_grant][:code]
@@ -26,9 +20,9 @@ module Heroku
         json: {
           id: heroku_uuid,
           config: {
-            SUDO_SANDWICH_COMMAND: PLAN_COMMANDS[params[:plan]],
+            SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[params[:plan]],
           },
-          message: "Thanks for using Sudo Sandwich."
+          message: 'Thanks for using Sudo Sandwich.'
         },
         status: 200
       )
@@ -42,7 +36,7 @@ module Heroku
 
       render json: {
         config: {
-          SUDO_SANDWICH_COMMAND: PLAN_COMMANDS[params[:plan]]
+          SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[new_plan]
         },
         message: "Successfully changed from #{original_plan} to #{new_plan}"
       }

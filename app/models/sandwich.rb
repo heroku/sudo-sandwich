@@ -1,4 +1,10 @@
 class Sandwich < ActiveRecord::Base
+  PLAN_CONFIG = {
+    'test' => 'This is a test',
+    'pbj' => 'Make me a PB&J!',
+    'blt' => 'Make me a BLT!',
+  }.freeze
+
   attribute :oauth_grant_code
   attribute :access_token
   attribute :refresh_token
@@ -7,5 +13,5 @@ class Sandwich < ActiveRecord::Base
   attr_encrypted :access_token, key: ENV['ENCRYPTION_KEY']
   attr_encrypted :refresh_token, key: ENV['ENCRYPTION_KEY']
 
-  enum plan: [:test, :pbj, :blt]
+  validates :plan, inclusion: { in: PLAN_CONFIG.keys }
 end

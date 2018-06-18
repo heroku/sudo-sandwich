@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 20180614161254) do
     t.string "encrypted_refresh_token"
     t.string "encrypted_refresh_token_iv"
     t.datetime "access_token_expires_at"
-    t.integer "plan"
+    t.string "plan"
   end
 
 end

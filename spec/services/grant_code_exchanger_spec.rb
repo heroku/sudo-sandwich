@@ -6,7 +6,7 @@ RSpec.describe GrantCodeExchanger do
       refresh_token_from_fixture = 'fake-refresh-token'
       access_token_from_fixture = 'fake-access-token'
       heroku_uuid = 'some-uuid'
-      Sandwich.create!(heroku_uuid: heroku_uuid)
+      Sandwich.create!(heroku_uuid: heroku_uuid, plan: 'test')
 
       GrantCodeExchanger.new(heroku_uuid: heroku_uuid, oauth_grant_code: 'some-code').run
       sandwich = Sandwich.find_by(heroku_uuid: heroku_uuid)
@@ -21,7 +21,7 @@ RSpec.describe GrantCodeExchanger do
         expires_in_seconds_from_fixture = 28799
         expires_time = time + expires_in_seconds_from_fixture
         heroku_uuid = 'some-uuid'
-        Sandwich.create!(heroku_uuid: heroku_uuid)
+        Sandwich.create!(heroku_uuid: heroku_uuid, plan: 'test')
 
         GrantCodeExchanger.new(heroku_uuid: heroku_uuid, oauth_grant_code: 'some-code').run
         sandwich = Sandwich.find_by(heroku_uuid: heroku_uuid)

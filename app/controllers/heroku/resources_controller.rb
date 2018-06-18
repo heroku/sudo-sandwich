@@ -3,10 +3,12 @@ module Heroku
     def create
       heroku_uuid = params[:uuid]
       oauth_grant_code = params[:oauth_grant][:code]
+      plan = params[:plan]
 
       Sandwich.create!(
         heroku_uuid: heroku_uuid,
         oauth_grant_code: oauth_grant_code,
+        plan: plan,
       )
 
       ExchangeGrantTokenJob.perform_later(
@@ -18,12 +20,27 @@ module Heroku
         json: {
           id: heroku_uuid,
           config: {
-            SUDO_SANDWICH_COMMAND: "Make me a PB&J!"
+            SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[params[:plan]],
           },
-          message: "Thanks for using Sudo Sandwich."
+          message: 'Thanks for using Sudo Sandwich.'
         },
         status: 200
       )
+    end
+
+    def update
+      sandwich = Sandwich.find_by(heroku_uuid: params[:id])
+      original_plan = sandwich.plan
+      new_plan = params[:plan]
+      sandwich.update!(plan: new_plan)
+
+      render json: {
+        config: {
+          SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[new_plan]
+        },
+        message: "Successfully changed from #{original_plan} to #{new_plan}"
+      }
+
     end
 
     def destroy

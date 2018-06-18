@@ -31,7 +31,7 @@ class GrantCodeExchanger
   def response
     Excon.new(BASE_URL).post(
       path: "/oauth/token",
-      params: {
+      query: {
         code: oauth_grant_code,
         grant_type: GRANT_TYPE,
         client_secret: client_secret,

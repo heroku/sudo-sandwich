@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe Heroku::ResourcesController do
   describe 'POST /heroku/resources' do
     it 'returns a 200' do
-      http_login(ENV['SLUG'], ENV['PASSWORD'])
       stub_grant_code_exchanger
 
       post :create, params: {
@@ -18,7 +17,6 @@ RSpec.describe Heroku::ResourcesController do
     end
 
     it 'returns the correct json response' do
-      http_login(ENV['SLUG'], ENV['PASSWORD'])
       stub_grant_code_exchanger
       heroku_uuid = '123-ABC-456-DEF'
       expected_response = {
@@ -41,7 +39,6 @@ RSpec.describe Heroku::ResourcesController do
     end
 
     it 'saves the plan and encrypted oauth grant code' do
-      http_login(ENV['SLUG'], ENV['PASSWORD'])
       stub_grant_code_exchanger
       heroku_uuid = '123-ABC-456-DEF'
       code = 'supersecretcode'

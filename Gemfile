@@ -26,6 +26,7 @@ end
 
 group :test do
   gem 'rspec-rails', '~> 3.6'
+  gem 'rails-controller-testing'
   gem 'sinatra'
   gem 'webmock'
   gem 'timecop'

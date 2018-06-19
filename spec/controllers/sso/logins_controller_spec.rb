@@ -6,16 +6,14 @@ RSpec.describe Sso::LoginsController do
       it 'redirects with a 302' do
         resource_id = '123'
         Sandwich.create!(heroku_uuid: resource_id, plan: 'test')
-        timestamp = '567'
-        resource_token = ResourceTokenCreator.new(
-          heroku_uuid: resource_id,
-          timestamp: timestamp
-        ).run
+        resource_token = 'valid_token'
+        resource_token_double = double(run: resource_token)
+        allow(ResourceTokenCreator).to receive(:new).and_return(resource_token_double)
 
         post :create,
           params: {
           resource_id: resource_id,
-          timestamp: timestamp,
+          timestamp: '567',
           resource_token: resource_token,
         }
 
@@ -27,10 +25,10 @@ RSpec.describe Sso::LoginsController do
       it 'returns a 403' do
         resource_id = '123'
         timestamp = '567'
-        resource_token = ResourceTokenCreator.new(
-          heroku_uuid: 'WRONG',
-          timestamp: timestamp
-        ).run
+        resource_token = 'valid_token'
+        invalid_resource_token = 'invalid_token'
+        resource_token_double = double(run: invalid_resource_token)
+        allow(ResourceTokenCreator).to receive(:new).and_return(resource_token_double)
 
         post :create,
           params: {

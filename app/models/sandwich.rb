@@ -1,6 +1,7 @@
 class Sandwich < ActiveRecord::Base
+  BASE_PLAN = 'test'.freeze
   PLAN_CONFIG = {
-    'test' => 'This is a test',
+    BASE_PLAN => 'This is a test',
     'pbj' => 'Make me a PB&J!',
     'blt' => 'Make me a BLT!',
   }.freeze

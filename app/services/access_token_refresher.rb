@@ -1,5 +1,5 @@
-class GrantCodeExchanger
-  GRANT_TYPE = 'authorization_code'
+class AccessTokenRefresher
+  GRANT_TYPE = 'refresh_token'
   BASE_URL = 'https://id.heroku.com'
 
   def initialize(sandwich_id:, client_secret: ENV.fetch('CLIENT_SECRET'))
@@ -10,7 +10,6 @@ class GrantCodeExchanger
   def run
     sandwich.update!(
       access_token: response_body[:access_token],
-      refresh_token: response_body[:refresh_token],
       access_token_expires_at: expires_at
     )
   end
@@ -31,7 +30,7 @@ class GrantCodeExchanger
     Excon.new(BASE_URL).post(
       path: "/oauth/token",
       query: {
-        code: sandwich.oauth_grant_code,
+        refresh_token: sandwich.refresh_token,
         grant_type: GRANT_TYPE,
         client_secret: client_secret,
       }

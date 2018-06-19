@@ -1,10 +1,13 @@
 class ExchangeGrantTokenJob < ApplicationJob
   queue_as :default
 
-  def perform(heroku_uuid:, oauth_grant_code:)
+  def perform(sandwich_id:, sandwich_plan:)
     GrantCodeExchanger.new(
-      heroku_uuid: heroku_uuid,
-      oauth_grant_code: oauth_grant_code,
+      sandwich_id: sandwich_id,
     ).run
+
+    if sandwich_plan != Sandwich::BASE_PLAN
+      ProvisionPlanJob.perform_later(sandwich_id: sandwich_id)
+    end
   end
 end

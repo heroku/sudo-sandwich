@@ -1,30 +1,26 @@
 module Heroku
   class ResourcesController < ApplicationController
     def create
-      heroku_uuid = params[:uuid]
-      oauth_grant_code = params[:oauth_grant][:code]
-      plan = params[:plan]
+      sandwich = create_sandwich
+      enqueue_token_exchange_job(sandwich)
 
-      Sandwich.create!(
-        heroku_uuid: heroku_uuid,
-        oauth_grant_code: oauth_grant_code,
-        plan: plan,
-      )
-
-      ExchangeGrantTokenJob.perform_later(
-        heroku_uuid: heroku_uuid,
-        oauth_grant_code: oauth_grant_code,
-      )
+      if plan == Sandwich::BASE_PLAN # synchronous provisioning
+        message = 'Thanks for using Sudo Sandwich.'
+        status = 200
+      else # async provisioning
+        message = 'Your add-on is being provisioned. It will be available shortly.'
+        status = 202
+      end
 
       render(
         json: {
           id: heroku_uuid,
           config: {
-            SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[params[:plan]],
+            SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[plan],
           },
-          message: 'Thanks for using Sudo Sandwich.'
+          message: message
         },
-        status: 200
+        status: status
       )
     end
 
@@ -46,6 +42,35 @@ module Heroku
     def destroy
       Sandwich.find_by(heroku_uuid: params[:id]).destroy!
       render status: 204
+    end
+
+    private
+
+    def create_sandwich
+      Sandwich.create!(
+        heroku_uuid: heroku_uuid,
+        oauth_grant_code: oauth_grant_code,
+        plan: plan,
+      )
+    end
+
+    def enqueue_token_exchange_job(sandwich)
+      ExchangeGrantTokenJob.perform_later(
+        sandwich_id: sandwich.id,
+        sandwich_plan: sandwich.plan,
+      )
+    end
+
+    def heroku_uuid
+      params[:uuid]
+    end
+
+    def oauth_grant_code
+      params[:oauth_grant][:code]
+    end
+
+    def plan
+      params[:plan]
     end
   end
 end

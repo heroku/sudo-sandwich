@@ -1,5 +1,7 @@
 module Sso
   class LoginsController < ApplicationController
+    skip_before_action :http_authenticate
+
     def create
       token = ResourceTokenCreator.new(
         heroku_uuid: heroku_uuid,

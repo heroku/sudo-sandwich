@@ -11,9 +11,8 @@ module Heroku
 
     def session_auth
       find_sandwich
-      id = session[:sandwich_id]
 
-      if @sandwich.id != id
+      if @sandwich.id != session[:sandwich_id]
         render plain: "Authentication failed", status: 403
       end
     end

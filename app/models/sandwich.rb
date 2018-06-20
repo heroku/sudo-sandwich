@@ -1,6 +1,7 @@
 class Sandwich < ActiveRecord::Base
+  BASE_PLAN = 'test'.freeze
   PLAN_CONFIG = {
-    'test' => 'This is a test',
+    BASE_PLAN => 'This is a test',
     'pbj' => 'Make me a PB&J!',
     'blt' => 'Make me a BLT!',
   }.freeze
@@ -14,4 +15,8 @@ class Sandwich < ActiveRecord::Base
   attr_encrypted :refresh_token, key: ENV['ENCRYPTION_KEY']
 
   validates :plan, inclusion: { in: PLAN_CONFIG.keys }
+
+  def not_provisioned?
+    state != 'provisioned'
+  end
 end

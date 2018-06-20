@@ -1,0 +1,30 @@
+{
+    "actions": [],
+    "config_vars": [
+        "SUDO_SANDWICH_COMMAND"
+    ],
+    "created_at": "2018-06-19T22:59:56Z",
+    "id": "11acb356-a59d-4fd1-a36c-fc535e8604f3",
+    "name": "sudo-sandwich-vertical-92072",
+    "addon_service": {
+        "id": "d7f4826f-a81f-4b3a-bdbc-8e5c9271ae7d",
+        "name": "sudo-sandwich"
+    },
+    "plan": {
+        "id": "dc8f0102-0ff3-465d-b231-8c33835d1d36",
+        "name": "sudo-sandwich:pbj"
+    },
+    "app": {
+        "id": "439b0b54-be57-4c22-8cf6-927bad06bda4",
+        "name": "app-for-testing-add-ons"
+    },
+    "provider_id": "11acb356-a59d-4fd1-a36c-fc535e8604f3",
+    "state": "provisioned",
+    "updated_at": "2018-06-19T23:02:02Z",
+    "web_url": "https://addons-sso.heroku.com/apps/439b0b54-be57-4c22-8cf6-927bad06bda4/addons/11acb356-a59d-4fd1-a36c-fc535e8604f3",
+    "billed_price": {
+        "cents": 0,
+        "contract": false,
+        "unit": "month"
+    }
+}

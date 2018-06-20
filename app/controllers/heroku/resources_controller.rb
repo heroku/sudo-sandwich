@@ -5,10 +5,10 @@ module Heroku
       enqueue_token_exchange_job(sandwich)
 
       if plan == Sandwich::BASE_PLAN # synchronous provisioning
-        message = 'Thanks for using Sudo Sandwich.'
+        message = 'Thanks for using Sudo Sandwich. Your add-on is available for use immediately!'
         status = 200
       else # async provisioning
-        message = 'Your add-on is being provisioned. It will be available shortly.'
+        message = 'Sudo Sandwich is being provisioned. It will be available shortly.'
         status = 202
       end
 

@@ -45,7 +45,7 @@ RSpec.describe Heroku::ResourcesController do
             config: {
               SUDO_SANDWICH_COMMAND: 'This is a test'
             },
-            message: 'Thanks for using Sudo Sandwich.'
+            message: 'Thanks for using Sudo Sandwich. Your add-on is available for use immediately!'
           }
 
           post :create, params: {
@@ -105,7 +105,7 @@ RSpec.describe Heroku::ResourcesController do
           config: {
             SUDO_SANDWICH_COMMAND: 'Make me a PB&J!'
           },
-          message: 'Your add-on is being provisioned. It will be available shortly.'
+          message: 'Sudo Sandwich is being provisioned. It will be available shortly.'
         }
 
         post :create, params: {

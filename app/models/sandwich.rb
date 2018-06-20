@@ -15,4 +15,8 @@ class Sandwich < ActiveRecord::Base
   attr_encrypted :refresh_token, key: ENV['ENCRYPTION_KEY']
 
   validates :plan, inclusion: { in: PLAN_CONFIG.keys }
+
+  def not_provisioned?
+    state != 'provisioned'
+  end
 end

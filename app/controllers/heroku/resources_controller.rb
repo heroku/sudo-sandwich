@@ -59,10 +59,7 @@ module Heroku
     end
 
     def enqueue_token_exchange_job(sandwich)
-      ExchangeGrantTokenJob.perform_later(
-        sandwich_id: sandwich.id,
-        sandwich_plan: sandwich.plan,
-      )
+      ExchangeGrantTokenJob.perform_later(sandwich_id: sandwich.id)
     end
 
     def heroku_uuid

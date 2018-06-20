@@ -18,7 +18,7 @@ RSpec.describe Heroku::ResourcesController do
       sandwich = Sandwich.find_by(heroku_uuid: heroku_uuid)
 
       expect(ExchangeGrantTokenJob).to have_received(:perform_later).
-        with(sandwich_id: sandwich.id, sandwich_plan: 'pbj')
+        with(sandwich_id: sandwich.id)
     end
 
     context 'test plan' do

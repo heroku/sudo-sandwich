@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe PlanProvisioner do
   describe '#run' do
-    it 'returns the expected response from api.heroku.com' do
+    it 'updates the state to provisioned' do
       heroku_uuid = 'some-uuid'
       sandwich = Sandwich.create!(
         heroku_uuid: heroku_uuid,
@@ -10,9 +10,9 @@ RSpec.describe PlanProvisioner do
         access_token_expires_at: Time.now.utc + 1.day,
       )
 
-      response = PlanProvisioner.new(sandwich_id: sandwich.id).run
+      PlanProvisioner.new(sandwich_id: sandwich.id).run
 
-      expect(JSON.parse(response)['state']).to eq 'provisioned'
+      expect(sandwich.reload.state).to eq 'provisioned'
     end
 
     context 'access token is expired' do

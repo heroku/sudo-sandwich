@@ -23,7 +23,7 @@ RSpec.describe Heroku::ResourcesController do
 
     context 'test plan' do
       context 'synchronous provisioning' do
-        it 'returns a 200' do
+        it 'returns a 200, state of provisioned' do
           stub_grant_code_exchanger
 
           post :create, params: {
@@ -33,8 +33,10 @@ RSpec.describe Heroku::ResourcesController do
               'code': 'supersecretcode'
             }
           }
+          sandwich = Sandwich.find_by(heroku_uuid: '123ABC')
 
           expect(response.code).to eq('200')
+          expect(sandwich.state).to eq('provisioned')
         end
 
         it 'returns the correct json response' do
@@ -55,8 +57,10 @@ RSpec.describe Heroku::ResourcesController do
               'code': 'sekret'
             }
           }
+          sandwich = Sandwich.find_by(heroku_uuid: heroku_uuid)
 
           expect(parsed_response_body).to eq(expected_response)
+          expect(sandwich.state).to eq('provisioned')
         end
 
         it 'saves the plan and encrypted oauth grant code' do

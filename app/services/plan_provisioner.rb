@@ -10,7 +10,8 @@ class PlanProvisioner
       AccessTokenRefresher.new(sandwich_id: sandwich_id).run
     end
 
-    perform_request.body
+    perform_request
+    sandwich.update(state: 'provisioned')
   end
 
   private

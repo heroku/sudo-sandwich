@@ -1,16 +1,19 @@
 module Heroku
   class ResourcesController < ApplicationController
     def create
-      sandwich = create_sandwich
-      enqueue_token_exchange_job(sandwich)
-
       if plan == Sandwich::BASE_PLAN # synchronous provisioning
         message = 'Thanks for using Sudo Sandwich. Your add-on is available for use immediately!'
         status = 200
+        state = 'provisioned'
       else # async provisioning
         message = 'Sudo Sandwich is being provisioned. It will be available shortly.'
         status = 202
+        state = 'provisioning'
       end
+
+      sandwich = create_sandwich(state)
+      enqueue_token_exchange_job(sandwich)
+
 
       render(
         json: {
@@ -46,11 +49,12 @@ module Heroku
 
     private
 
-    def create_sandwich
+    def create_sandwich(state)
       Sandwich.create!(
         heroku_uuid: heroku_uuid,
         oauth_grant_code: oauth_grant_code,
         plan: plan,
+        state: state,
       )
     end
 

@@ -1,6 +1,7 @@
 # Sudo Sandwich is an example Heroku Add-on
 
-Example Heroku add-on built with Rails for the Add-on Partner API v3.
+Example Heroku add-on built with Rails for the v3 of the Platform API for
+Partners.
 
 This add-on is meant to demonstrate integrations. Integrations can be written in
 any language or framework. We don't officially support this beyond that it's
@@ -38,10 +39,10 @@ forward.
 Basic auth is implemented via the [`HttpBasicAuth`
 concern](app/controllers/concerns/http_basic_auth.rb). This concern is included
 in [`ApplicationController`](app/controllers/application_controller.rb), which
-all other controllers inherit from, because the Add-on Partner API sends basic
-auth credentials with all requests. Basic auth is selectively skipped for the
-single sign-on views, which are accessed by Heroku customers who are using the
-add-on rather than the Add-on Partner API.
+all other controllers inherit from, because the Platform API for Partners sends
+basic auth credentials with all requests. Basic auth is selectively skipped for
+the single sign-on views, which are accessed by Heroku customers who are using
+the add-on rather than the Platform API for Partners.
 
 The username and password for basic auth are being accessed via environment
 variables whose values match the `slug` and `password` fields in the manifest.
@@ -85,9 +86,9 @@ being provisioned asynchronously, an `access_token` is required. Retrieving an
 Once the `access_token` is available, a plan is marked as `provisioned` by
 running the [`ProvisionPlanJob`](app/jobs/provision_plan_job.rb). This
 background job calls [`PlanProvisioner`](app/services/plan_provisioner.rb),
-which sends a POST request to the Add-on Partner API. This request includes the
-`uuid` of the provisioned resource, telling the Add-on Partner API to mark that
-resource as provisioned.
+which sends a POST request to the Platform API for Partners. This request
+includes the `uuid` of the provisioned resource, telling the Platform API for
+Partners to mark that resource as provisioned.
 
 ## Grant code exchange
 
@@ -111,8 +112,8 @@ created in the
 `sandwich_id`. That job calls the
 [`GrantCodeExchanger`](app/services/grant_code_exchanger.rb) service class,
 which sends a POST request to `https://id.heroku.com/oauth/token` with the grant
-code. The API responds with the `refresh_token` and `access_token`. An example of
-this response is included in [the
+code. The Platform API for Partners responds with the `refresh_token` and
+`access_token`. An example of this response is included in [the
 fixtures](spec/support/fixtures/grant_code_exchange_response.json).
 
 `GrantCodeExchanger` saves the `access_token`, `refresh_token`, and an

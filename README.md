@@ -80,8 +80,9 @@ the add-on customer that their add-on is available immediately.
 
 For all other plans, a status code of 202 is returned, which tells
 Heroku that the add-on is being provisioned asynchronously. For plans that are
-being provisioned asynchronously, an `access_token` is required. Retrieving an
-`access_token` is covered in the "Grant code exchange" section.
+being provisioned asynchronously, an `access_token` is required to complete the
+provisioning process. Retrieving an `access_token` is covered in the "Grant code
+exchange" section.
 
 Once the `access_token` is available, a plan is marked as `provisioned` by
 running the [`ProvisionPlanJob`](app/jobs/provision_plan_job.rb). This
@@ -104,10 +105,16 @@ The OAuth Grant Code is used to obtain a `refresh_token` and `access_token` for
 the add-on resource being provisioned. The process by which those are obtained
 is called the grant code exchange.
 
+Obtaining a `refresh_token` and `access_token` is advised whether they are going
+to be used immediately or not. For example, if an add-on ever needs to rotate
+credentials, an `access_token` would be required to update the config for each
+Heroku applications that use the add-on.
+
 This application saves the OAuth Grant Code on the Sandwich record when it is
 created in the
 [`Heroku::ResourcesController`](app/controllers/heroku/resources_controller.rb)
-`create` method. The controller then enqueues the
+`create` method. Because the OAuth Grant Code expires after five minutes, the
+controller immediately enqueues the
 [`ExchangeGrantTokenJob`](app/jobs/exchange_grant_token_job.rb) with the
 `sandwich_id`. That job calls the
 [`GrantCodeExchanger`](app/services/grant_code_exchanger.rb) service class,
@@ -117,7 +124,9 @@ code. The Platform API for Partners responds with the `refresh_token` and
 fixtures](spec/support/fixtures/grant_code_exchange_response.json).
 
 `GrantCodeExchanger` saves the `access_token`, `refresh_token`, and an
-expiration timestamp for the `access_token` on the Sandwich record. Once the
+expiration timestamp for the `access_token` on the Sandwich record. The
+`access_token` and `refresh_token` are encrypted at rest using the
+[`attr_encrypted`](https://github.com/attr-encrypted/attr_encrypted) gem. Once the
 `access_token` is expired, a new one can be obtained using the `refresh_token`.
 
 In the Sudo Sandwich app, we use the `access_token` for async provisioning. The

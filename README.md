@@ -169,7 +169,7 @@ Plan changes happen via the
 `heroku_uuid` sent with the request so that the plan matches the `plan` param
 sent with the request.
 
-## Single sign on
+## Single sign on dashboard
 
 ### Heroku docs
 

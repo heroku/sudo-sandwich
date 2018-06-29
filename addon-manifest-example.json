@@ -1,0 +1,26 @@
+{
+  "id": "sudo-sandwich",
+  "api": {
+    "version": "3",
+    "test": {
+      "sso_url": "http://localhost:3000/sso/login",
+      "base_url": "http://localhost:3000/heroku/resources"
+    },
+    "regions": [
+      "us"
+    ],
+    "password": "FAKE PASSWORD",
+    "requires": [
+
+    ],
+    "sso_salt": "FAKE SALT",
+    "production": {
+      "sso_url": "https://sudo-sandwich.herokuapp.com/sso/login",
+      "base_url": "https://sudo-sandwich.herokuapp.com/heroku/resources"
+    },
+    "config_vars": [
+      "SUDO_SANDWICH_COMMAND"
+    ],
+    "$base": 152951532282013
+  }
+}

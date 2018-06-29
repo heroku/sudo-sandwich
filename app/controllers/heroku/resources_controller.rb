@@ -14,7 +14,6 @@ module Heroku
       sandwich = create_sandwich(state)
       enqueue_token_exchange_job(sandwich)
 
-
       render(
         json: {
           id: heroku_uuid,

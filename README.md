@@ -13,6 +13,12 @@ https://devcenter.heroku.com/articles/building-an-add-on.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for information on how to set up and run
 the code for this application.
 
+To install this add-on to an existing Heroku app, run the following:
+
+```
+heroku addons:create sudo-sandwich
+```
+
 ## Add-on manifest
 
 ### Heroku docs

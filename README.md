@@ -1,7 +1,7 @@
 # Sudo Sandwich is an example Heroku Add-on
 
-Example Heroku add-on built with Rails for the v3 of the Platform API for
-Partners.
+Example Heroku add-on for the v3 of the Platform API for Partners built with
+Ruby on Rails.
 
 This add-on is meant to demonstrate integrations. Integrations can be written in
 any language or framework. We don't officially support this beyond that it's

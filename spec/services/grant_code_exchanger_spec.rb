@@ -25,7 +25,7 @@ RSpec.describe GrantCodeExchanger do
 
         GrantCodeExchanger.new(sandwich_id: sandwich.id).run
 
-        expect(sandwich.reload.access_token_expires_at).to eq expires_time
+        expect(sandwich.reload.access_token_expires_at).to be_within(0.01.second).of expires_time
       end
     end
   end

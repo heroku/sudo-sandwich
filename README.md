@@ -19,6 +19,10 @@ To install this add-on to an existing Heroku app, run the following:
 heroku addons:create sudo-sandwich
 ```
 
+To test the app yourself, you can deploy it using this button:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## Add-on manifest
 
 ### Heroku docs

@@ -19,3 +19,4 @@
 
 .byebug_history
 addon-manifest.json
+.env

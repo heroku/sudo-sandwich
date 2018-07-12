@@ -1,0 +1,47 @@
+{
+  "name": "Sudo Sandwich",
+  "description": "Example Heroku add-on built with Rails.",
+  "repository": "https://github.com/heroku/sudo-sandwich",
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/ruby"
+    }
+  ],
+  "env": {
+    "SLUG":{
+      "description": "Slug for add-on. Must match 'id' value in addon-manifest.json",
+      "required": true
+    },
+    "PASSWORD":{
+      "description": "Password for basic auth. Must match 'password' value in addon-manifest.json",
+      "required": true
+    },
+    "ENCRYPTION_KEY":{
+      "description": "Encryption key for attr_encrypted attributes",
+      "required": true,
+      "generator": "secret"
+    },
+    "SSO_SALT":{
+      "description": "Salt for SSO. Must match 'sso_salt' value in addon-manifest.json",
+      "required": true
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "9.5"
+      }
+    }
+  ]
+}

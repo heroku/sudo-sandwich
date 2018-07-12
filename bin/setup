@@ -26,8 +26,8 @@ chdir APP_ROOT do
   step "Creating .env if it does not already exist" do
     [".env"].each do |file|
       unless File.exist?(file)
-        cp ".example.#{file}", file
-        puts "Copied .example.#{file} to #{file}"
+        cp ".example#{file}", file
+        puts "Copied .example#{file} to #{file}"
       end
     end
   end

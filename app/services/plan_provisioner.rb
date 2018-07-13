@@ -20,8 +20,8 @@ class PlanProvisioner
   attr_reader :sandwich_id
 
   def set_config_variable
-    Excon.new(BASE_URL).post(
-      path: "/addons/#{heroku_uuid}/actions/provision",
+    Excon.new(BASE_URL).patch(
+      path: "/addons/#{heroku_uuid}/config",
       headers: {
         'Accept' => 'application/vnd.heroku+json; version=3',
         'Authorization' => "Bearer #{access_token}",

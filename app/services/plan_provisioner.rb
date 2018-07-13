@@ -10,7 +10,8 @@ class PlanProvisioner
       AccessTokenRefresher.new(sandwich_id: sandwich_id).run
     end
 
-    perform_request
+    set_config_variable
+    mark_addon_as_provisioned
     sandwich.update(state: 'provisioned')
   end
 
@@ -18,7 +19,26 @@ class PlanProvisioner
 
   attr_reader :sandwich_id
 
-  def perform_request
+  def set_config_variable
+    Excon.new(BASE_URL).post(
+      path: "/addons/#{heroku_uuid}/actions/provision",
+      headers: {
+        'Accept' => 'application/vnd.heroku+json; version=3',
+        'Authorization' => "Bearer #{access_token}",
+        'Content-Type' => 'application/json',
+      },
+      body: JSON.dump(
+        config: [
+          {
+            name: "SUDO_SANDWICH_COMMAND",
+            value: Sandwich::PLAN_CONFIG[sandwich.plan],
+          }
+        ]
+      )
+    )
+  end
+
+  def mark_addon_as_provisioned
     Excon.new(BASE_URL).post(
       path: "/addons/#{heroku_uuid}/actions/provision",
       headers: {

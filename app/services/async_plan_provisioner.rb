@@ -1,4 +1,4 @@
-class PlanProvisioner
+class AsyncPlanProvisioner
   BASE_URL = 'https://api.heroku.com'
 
   def initialize(sandwich_id:)

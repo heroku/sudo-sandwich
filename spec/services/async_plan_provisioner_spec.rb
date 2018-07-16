@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PlanProvisioner do
+RSpec.describe AsyncPlanProvisioner do
   describe '#run' do
     it 'updates the state to provisioned' do
       heroku_uuid = 'some-uuid'
@@ -10,7 +10,7 @@ RSpec.describe PlanProvisioner do
         access_token_expires_at: Time.now.utc + 1.day,
       )
 
-      PlanProvisioner.new(sandwich_id: sandwich.id).run
+      described_class.new(sandwich_id: sandwich.id).run
 
       expect(sandwich.reload.state).to eq 'provisioned'
     end
@@ -29,7 +29,7 @@ RSpec.describe PlanProvisioner do
           refresher_double = double(run: true)
           allow(AccessTokenRefresher).to receive(:new).and_return(refresher_double)
 
-          PlanProvisioner.new(sandwich_id: sandwich.id).run
+          described_class.new(sandwich_id: sandwich.id).run
 
           expect(AccessTokenRefresher).to have_received(:new).with(
             sandwich_id: sandwich.id,
@@ -51,7 +51,7 @@ RSpec.describe PlanProvisioner do
           )
           allow(AccessTokenRefresher).to receive(:new)
 
-          PlanProvisioner.new(sandwich_id: sandwich.id).run
+          described_class.new(sandwich_id: sandwich.id).run
 
           expect(AccessTokenRefresher).not_to have_received(:new)
         end

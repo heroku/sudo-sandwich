@@ -19,7 +19,7 @@ To install this add-on to an existing Heroku app, run the following:
 heroku addons:create sudo-sandwich
 ```
 
-To test the app yourself, you can deploy it using this button:
+To test the app yourself, you can use this button:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
@@ -50,12 +50,14 @@ Basic auth is implemented via the [`HttpBasicAuth`
 concern](app/controllers/concerns/http_basic_auth.rb). This concern is included
 in [`ApplicationController`](app/controllers/application_controller.rb), which
 all other controllers inherit from, because the Platform API for Partners sends
-basic auth credentials with all requests. Basic auth is selectively skipped for
-the single sign-on views, which are accessed by Heroku customers who are using
-the add-on rather than the Platform API for Partners.
+basic auth credentials with all requests.
 
-The username and password for basic auth are being accessed via environment
-variables whose values match the `slug` and `password` fields in the manifest.
+The username and password for basic auth are accessed via environment variables
+whose values match the `slug` and `password` fields in the manifest.
+
+Basic auth is selectively skipped for the single sign-on views, which are
+accessed by Heroku customers who use an add-on resource rather than the
+Platform API for Partners.
 
 ## The provisioning request
 
@@ -68,13 +70,13 @@ variables whose values match the `slug` and `password` fields in the manifest.
 
 ### Related code
 
-The Sudo Sandwich add-on is provisioned synchronously or asynchronously
+The Sudo Sandwich add-on can be provisioned synchronously or asynchronously
 depending on the plan that is selected. This somewhat artificial plan slug
 distinction is just to demonstrate the process of provisioning plans
 asynchronously and synchronously.
 
 For both types of provisioning, the `base_url` key in the add-on manifest
-specifies a path of `/heroku/resources`, which is routed to the
+specifies a path of `/heroku/resources`. A POST to this path is routed to the
 [`Heroku::ResourcesController`](app/controllers/heroku/resources_controller.rb)
 `#create` method in this codebase. This is the endpoint that Heroku hits when a
 customer creates an add-on resource.
@@ -82,24 +84,60 @@ customer creates an add-on resource.
 #### Synchronous provisioning
 
 The controller looks for the `plan` param, and if it matches
-`Sandwich::BASE_PLAN` it returns a status code of 200, which tells Heroku that
-the add-on is being provisioned synchronously, and a message that tells
-the add-on customer that their add-on is available immediately.
+`Sandwich::BASE_PLAN` (currently `test`), we return:
+
+* A status code of 200,
+* An example config var that's included in an app's environment, and
+* A message that's displayed to customers telling them the add-on is
+  immediately available.
+
+The 200 status code tells Heroku that the add-on resource has been provisioned
+and that the config variables returned should be set on a release for all apps
+associated with the resource.  It also sets the internal state of the add-on to
+`provisioned`, which is represented to customers as `created`.
 
 #### Asynchronous provisioning
 
-For all other plans, a status code of 202 is returned, which tells
-Heroku that the add-on is being provisioned asynchronously. For plans that are
-being provisioned asynchronously, an `access_token` is required to complete the
-provisioning process. Retrieving an `access_token` is covered in the "Grant code
-exchange" section.
+For all other plans, we return:
+
+* A status code of 202, and
+* A message telling the customer that the add-on is being provisioned and will
+  be available shortly.
+
+A 202 status tells Heroku that the add-on is being provisioned asynchronously
+and sets its state internally to `provisioning`, which is represented to
+customers as `creating`.
+
+We DO NOT return a config variable, as it's expected you don't know it until
+your add-on resource is fully created in your infrastructure.
+
+The sudo-sandwich add-on enqueues additional background jobs that mimic how
+async provisioning might work for plans that take a longer time to initialize.
+
+For plans that are being provisioned asynchronously, an `access_token` is
+required to complete the provisioning process as an add-on partner. Retrieving
+an `access_token` is covered in the "Grant code exchange" section.
 
 Once the `access_token` is available, a plan is marked as `provisioned` by
-running the [`ProvisionPlanJob`](app/jobs/provision_plan_job.rb). This
-background job calls [`PlanProvisioner`](app/services/plan_provisioner.rb),
-which sends a POST request to the Platform API for Partners. This request
-includes the `uuid` of the provisioned resource, telling the Platform API for
-Partners to mark that resource as provisioned.
+running the [`ProvisionPlanJob`](app/jobs/provision_plan_job.rb).
+
+This background job calls
+[`AsyncPlanProvisioner`](app/services/async_plan_provisioner.rb), which:
+
+* Sends a PATCH request to the Platform API for Partners [add-on config
+  update](https://devcenter.heroku.com/articles/add-on-partner-api-reference#add-on-config-update)
+  endpoint with relevant config vars, and
+* Sends a POST request to the Platform API for Partners to [mark the add-on
+  resource as
+  provisioned](https://devcenter.heroku.com/articles/add-on-partner-api-reference#add-on-action-create-provision).
+
+A release is cut for all apps associated with an add-on resource once the PATCH
+request is sent to update config variables. You should be sure to mark the
+resource as provisioned too, add-on resources stuck in `provisioning` are
+deprovisioned after around 12 hours.
+
+Both endpoints use the `heroku_uuid` value to uniquely identify an add-on
+resource.
 
 ## Grant code exchange
 
@@ -113,12 +151,12 @@ When the provisioning request comes in to this app at the
 `/heroku/resources` endpoint, Heroku sends an OAuth Grant Code in the request.
 The OAuth Grant Code is used to obtain a `refresh_token` and `access_token` for
 the add-on resource being provisioned. The process by which those are obtained
-is called the grant code exchange.
+is called the "grant code exchange".
 
-Obtaining a `refresh_token` and `access_token` is advised whether they are going
-to be used immediately or not. For example, if an add-on ever needs to rotate
-credentials, an `access_token` would be required to update the config for each
-Heroku applications that use the add-on.
+Obtaining a `refresh_token` and `access_token` is advised whether they are
+going to be used immediately or not. For example, if an add-on ever needs to
+rotate credentials, an `access_token` would be required to update the config
+for the add-on resource.
 
 This application saves the OAuth Grant Code on the Sandwich record when it is
 created in the
@@ -169,8 +207,8 @@ that the request was successfully received and processed.
 
 Plan changes happen via the
 [`Heroku::ResourcesController`](app/controllers/heroku/resources_controller.rb)
-`#update` method. The controller updates the plan of the Sandwich record that corresponds with the
-`heroku_uuid` sent with the request so that the plan matches the `plan` param
+`#update` method. The controller updates the plan of the Sandwich record that
+corresponds with the `heroku_uuid` so that the plan matches the `plan` param
 sent with the request.
 
 ## Single sign on dashboard
@@ -197,4 +235,4 @@ sent with the request. If they match, a session variable is set and the user is
 redirected to the
 [`Heroku::DashboardController#show`](app/controllers/heroku/dashboard_controller.rb)
 action. In this view, the end user can see information about their add-on
-resource.
+resource. This is where you'd build your add-on resource dashboard.

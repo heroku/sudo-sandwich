@@ -10,7 +10,7 @@ class PlanProvisioner
       AccessTokenRefresher.new(sandwich_id: sandwich_id).run
     end
 
-    set_config_variable
+    update_config_variable
     mark_addon_as_provisioned
     sandwich.update(state: 'provisioned')
   end
@@ -19,7 +19,7 @@ class PlanProvisioner
 
   attr_reader :sandwich_id
 
-  def set_config_variable
+  def update_config_variable
     Excon.new(BASE_URL).patch(
       path: "/addons/#{heroku_uuid}/config",
       headers: {

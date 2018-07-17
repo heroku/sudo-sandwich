@@ -5,6 +5,11 @@ module Heroku
         message = 'Thanks for using Sudo Sandwich. Your add-on is available for use immediately!'
         status = 200
         state = 'provisioned'
+        payload = {
+          config: {
+            SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[plan],
+          }
+        }
       else # async provisioning
         message = 'Sudo Sandwich is being provisioned. It will be available shortly.'
         status = 202
@@ -17,11 +22,8 @@ module Heroku
       render(
         json: {
           id: heroku_uuid,
-          config: {
-            SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[plan],
-          },
           message: message
-        },
+        }.merge(payload || {}),
         status: status
       )
     end

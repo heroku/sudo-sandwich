@@ -106,9 +106,6 @@ RSpec.describe Heroku::ResourcesController do
         heroku_uuid = '123-ABC-456-DEF'
         expected_response = {
           id: heroku_uuid,
-          config: {
-            SUDO_SANDWICH_COMMAND: 'Make me a PB&J!'
-          },
           message: 'Sudo Sandwich is being provisioned. It will be available shortly.'
         }
 

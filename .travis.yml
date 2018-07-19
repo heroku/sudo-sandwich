@@ -1,0 +1,12 @@
+language: ruby
+rvm:
+- 2.3.7
+services:
+- postgresql
+cache: bundler
+bundler_args: --without production
+before_script:
+- cp .example.env .env
+- bin/rake db:setup --trace
+script:
+- bundle exec rake

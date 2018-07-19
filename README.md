@@ -1,5 +1,7 @@
 # Sudo Sandwich is an example Heroku Add-on
 
+[![Build Status](https://travis-ci.org/heroku/sudo-sandwich.svg?branch=master)](https://travis-ci.org/heroku/sudo-sandwich)
+
 Example Heroku add-on for the v3 of the Platform API for Partners built with
 Ruby on Rails.
 

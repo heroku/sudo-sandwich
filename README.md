@@ -265,7 +265,7 @@ In order to test this against staging, the following data must first exist in
   an `effective_at` datetime attribute that is older than the beginning of the
   previous hour.
 - An `AddonResource` for the `Addon`.
-- An `AddonResource` plan for the `AddonResource` and `Plan`. Must have an
+- An `AddonResourcePlan` for the `AddonResource` and `Plan`. Must have an
   `effective_at` datetime attribute that is older than the beginning of the
   previous hour.
 

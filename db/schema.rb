@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180620163102) do
+ActiveRecord::Schema.define(version: 20180723214358) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,18 @@ ActiveRecord::Schema.define(version: 20180620163102) do
     t.datetime "access_token_expires_at"
     t.string "plan"
     t.string "state"
+  end
+
+  create_table "usages", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "sandwich_id", null: false
+    t.datetime "timestamp", null: false
+    t.string "unit", null: false
+    t.integer "quantity", null: false
+    t.boolean "reported", default: false
+    t.json "error_messages"
+    t.index ["sandwich_id"], name: "index_usages_on_sandwich_id"
   end
 
 end

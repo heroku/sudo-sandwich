@@ -14,6 +14,7 @@ RSpec.configure do |config|
   config.before(:each) do
     WebMock.stub_request(:any, /id.heroku.com/).to_rack(FakeCoreIdentityApi)
     WebMock.stub_request(:any, /api.heroku.com/).to_rack(FakePlatformApi)
+    WebMock.stub_request(:any, /addons-staging.herokuapp.com/).to_rack(FakeAddonsApi)
   end
 
   config.infer_base_class_for_anonymous_controllers = false

@@ -238,3 +238,77 @@ redirected to the
 [`Heroku::DashboardController#show`](app/controllers/heroku/dashboard_controller.rb)
 action. In this view, the end user can see information about their add-on
 resource. This is where you'd build your add-on resource dashboard.
+
+## Usage reporting
+
+This is a feature that is under active development (pre-alpha).
+
+The `ReportUsageJob` calls the `UsageReporter` service class, which sends usage
+data to `https://addons-staging.herokuapp.com`. The data is sent to the
+`/api/v3/addons/#{slug}/usage_batches` endpoint in the add-ons staging instance.
+Basic authentication credentials are sent via the headers. The username and
+password must match the Manifest credentials for the `Addon` for which usage
+data is being reported. See [the
+docs](https://devcenter.heroku.com/articles/building-an-add-on#basic-authentication)
+for more info on basic auth.
+
+In order to test this against staging, the following data must first exist in
+`addons-staging.heroku.com`:
+
+- An `Addon` with a slug that matches the slug sent in the
+  `/api/v3/addons/#{slug}/usage_batches` endpoint (currently hard-coded to
+`sudo-sandwich` in the service class).
+- A `Plan` record that belongs to the `Addon` and has the `usage` attribute set
+  to true.
+- A `Unit` record belongs to the `Addon`.
+- A `Pricing` record for the `Plan` and `Unit` above. The `Pricing` must have
+  an `effective_at` datetime attribute that is older than the beginning of the
+  previous hour.
+- An `AddonResource` for the `Addon`.
+- An `AddonResourcePlan` for the `AddonResource` and `Plan`. Must have an
+  `effective_at` datetime attribute that is older than the beginning of the
+  previous hour.
+
+In order to test this against staging, the following data must first exist in
+the Sudo Sandwich database from which you are testing:
+
+- A `Sandwich` record the a `heroku_uuid` attribute that matches the
+  `AddonResource#uuid` above.
+- A `Usage` record that belongs to the `Sandwich` record, and a timestamp that
+  is equal to the hour boundary of the previous hour (in Ruby,
+  `DateTime.now.beginning_of_hour - 1.hour`), and a `unit` attribute that is
+  equal to the `Unit#name` above.
+
+The JSON body sent with the request to the usage endpoint contains a `timestamp`
+and an array of `usages`. The timestamp, which represents the datetime that
+the usage data s being reporting for, must be in `YYYY-MM-DDThh:mm:ssZ` format
+and must be hour boundary of previous hour (cannot be for further in past or for
+future).
+
+The `usages` array contains usage records. Each record must contain the
+`quantity`, `uuid` of the associated `AddonResource`, and `Unit#name`. The JSON is
+formatted as follows:
+
+```
+{
+ "timestamp": "2018-07-11T03:00:00Z"
+  "usages": [
+    {
+      "quantity": 5,
+      "resource": {"id": "addon-resource-uuid"},
+      "unit": {"name": "nibbles"},
+    }
+  ]
+}
+```
+
+Each JSON object in the `usages` array must be unique the that timestamp,
+resource, and unit tuple. Duplicates will be rejected.
+
+After running the job, you will know if a `Usage` was reported properly if the
+`reported` attribute is set to `true` (defaults to `false`). If it is `false`,
+the `errors` attribute of the `Usage` record should explain why it was not
+reported properly.
+
+*NOTE*: the current implementation does not handle all edge cases at this time.
+If you send invalid data, it is possible for it to silently fail.

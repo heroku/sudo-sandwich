@@ -256,14 +256,17 @@ In order to test this against staging, the following data must first exist in
 `addons-staging.heroku.com`:
 
 - An `Addon` with a slug that matches the slug sent in the
-  `/api/v3/addons/#{slug}/usage_batches` endpoint
-- An `AddonResource` for the `Addon`.
-  `resource['id']` sent in the test request's JSON request body.
+  `/api/v3/addons/#{slug}/usage_batches` endpoint (currently hard-coded to
+`sudo-sandwich` in the service class).
 - A `Plan` record that belongs to the `Addon` and has the `usage` attribute set
   to true.
 - A `Unit` record belongs to the `Addon`.
 - A `Pricing` record for the `Plan` and `Unit` above. The `Pricing` must have
   an `effective_at` datetime attribute that is older than the beginning of the
+  previous hour.
+- An `AddonResource` for the `Addon`.
+- An `AddonResource` plan for the `AddonResource` and `Plan`. Must have an
+  `effective_at` datetime attribute that is older than the beginning of the
   previous hour.
 
 In order to test this against staging, the following data must first exist in

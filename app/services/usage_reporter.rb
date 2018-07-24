@@ -15,7 +15,7 @@ class UsageReporter
       path: "/api/v3/addons/#{slug}/usage_batches",
       headers: {
         'Accept' => 'application/json',
-        'Authorization' => "Basic #{basic_auth_token}",
+        'Authorization' => basic_auth_token,
         'Content-Type' => 'application/json',
       },
       body: JSON.dump(
@@ -26,14 +26,18 @@ class UsageReporter
   end
 
   def mark_usages_as_reported
-    usage_responses.each do |usage_json|
-      usage_record = usage_for(usage_json)
+    if usage_responses
+      usage_responses.each do |usage_json|
+        usage_record = usage_for(usage_json)
 
-      if usage_record && usage_json["status"] == "accepted"
-        usage_record.update!(reported: true)
-      elsif usage_record # rejected
-        usage_record.update!(error_messages: usage_json["errors"])
+        if usage_record && usage_json["status"] == "accepted"
+          usage_record.update!(reported: true)
+        elsif usage_record # rejected
+          usage_record.update!(error_messages: usage_json["errors"])
+        end
       end
+    else
+      puts response.body
     end
   end
 

@@ -1,0 +1,21 @@
+{
+  "id": "123-123-123-123",
+  "usages": [
+    {
+      "quantity": 5,
+      "resource": {"id": "addon-resource-uuid"},
+      "unit": {"name": "nibbles"},
+      "id": "some-usage-uuid",
+      "status": "accepted"
+    },
+    {
+      "quantity": 6,
+      "resource": {"id": "addon-resource-uuid"},
+      "unit": {"name": "nibbles"},
+      "id": "some-other-usage-uuid",
+      "status": "rejected",
+      "errors": { "unit": ["cannot submit duplicate usages for the same unit, add_on resource, and timestamp"] }
+    }
+  ],
+  "timestamp": "2018-07-11T03:00:00Z"
+}

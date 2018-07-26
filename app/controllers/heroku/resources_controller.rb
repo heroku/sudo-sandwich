@@ -14,6 +14,11 @@ module Heroku
         message = 'Sudo Sandwich is being provisioned. It will be available shortly.'
         status = 202
         state = 'provisioning'
+        payload = {
+          config: {
+            SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[plan],
+          }
+        }
       end
 
       sandwich = create_sandwich(state)

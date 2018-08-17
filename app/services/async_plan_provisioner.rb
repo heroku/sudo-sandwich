@@ -11,6 +11,7 @@ class AsyncPlanProvisioner
     end
 
     update_config_variable
+    update_config_variable_to_nil
     mark_addon_as_provisioned
     sandwich.update(state: 'provisioned')
   end
@@ -20,6 +21,25 @@ class AsyncPlanProvisioner
   attr_reader :sandwich_id
 
   def update_config_variable
+    Excon.new(BASE_URL).patch(
+      path: "/addons/#{heroku_uuid}/config",
+      headers: {
+        'Accept' => 'application/vnd.heroku+json; version=3',
+        'Authorization' => "Bearer #{access_token}",
+        'Content-Type' => 'application/json',
+      },
+      body: JSON.dump(
+        config: [
+          {
+            name: "SUDO_SANDWICH_COMMAND",
+            value: Sandwich::PLAN_CONFIG[sandwich.plan],
+          }
+        ]
+      )
+    )
+  end
+
+  def update_config_variable_to_nil
     Excon.new(BASE_URL).patch(
       path: "/addons/#{heroku_uuid}/config",
       headers: {

@@ -32,7 +32,7 @@ class AsyncPlanProvisioner
         config: [
           {
             name: "SUDO_SANDWICH_COMMAND",
-            value: Sandwich::PLAN_CONFIG[sandwich.plan],
+            value: "here is a value",
           }
         ]
       )

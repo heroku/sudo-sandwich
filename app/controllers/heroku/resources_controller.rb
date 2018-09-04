@@ -15,7 +15,7 @@ module Heroku
       sandwich.reload
 
       resp = Excon.new('https://api.heroku.com').get(
-        path: "/addons",
+        path: "/addons/#{sandwich.heroku_uuid}/addon-attachments",
         headers: {
           'Accept' => 'application/vnd.heroku+json; version=3',
           'Authorization' => "Bearer #{sandwich.access_token}",
@@ -24,7 +24,7 @@ module Heroku
       )
 
       # access_token is nil according to logs
-      logger.debug("TRACER: sandwich ID: #{sandwich.id} response body #{resp.body}, sandwich token: #{sandwich.access_token} oauth_grant_code: #{sandwich.oauth_grant_code}")
+      logger.debug("TRACER: sandwich ID: #{sandwich.id} response body #{resp.body}, status_code: #{resp.status}, sandwich token: #{sandwich.access_token} oauth_grant_code: #{sandwich.oauth_grant_code}")
       render(
         json: {
           id: heroku_uuid,

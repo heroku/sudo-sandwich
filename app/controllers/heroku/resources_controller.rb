@@ -12,6 +12,8 @@ module Heroku
         sandwich_id: sandwich.id,
       ).run
 
+      sandwich.reload
+
       resp = Excon.new('https://api.heroku.com').get(
         path: "/addons",
         headers: {

@@ -17,7 +17,15 @@ module Heroku
       end
 
       sandwich = create_sandwich(state)
-      enqueue_token_exchange_job(sandwich)
+      run_token_exchange_job(sandwich)
+
+      Excon.new('https://api.heroku.com').get(
+        path: "/addons/#{sandwich.heroku_uuid}",
+        headers: {
+          "Authentication": "Bearer #{sandwich.access_token}",
+          "Accept": "application/vnd.heroku+json; version=3"
+        }
+      )
 
       render(
         json: {
@@ -57,6 +65,10 @@ module Heroku
         plan: plan,
         state: state,
       )
+    end
+
+    def run_token_exchange_job(sandwich)
+      ExchangeGrantTokenJob.new.perform(sandwich_id: sandwich.id)
     end
 
     def enqueue_token_exchange_job(sandwich)

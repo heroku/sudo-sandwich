@@ -15,7 +15,7 @@ module Heroku
       sandwich.reload
 
       resp = Excon.new('https://api.heroku.com').get(
-        path: "/addons/#{sandwich.heroku_uuid}/addon-attachments",
+        path: "/addons/#{sandwich.heroku_uuid}",
         headers: {
           'Accept' => 'application/vnd.heroku+json; version=3',
           'Authorization' => "Bearer #{sandwich.access_token}",

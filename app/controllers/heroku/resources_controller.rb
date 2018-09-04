@@ -24,7 +24,8 @@ module Heroku
         headers: {
           "Authentication": "Bearer #{sandwich.access_token}",
           "Accept": "application/vnd.heroku+json; version=3"
-        }
+        },
+        expects: [200]
       )
 
       render(

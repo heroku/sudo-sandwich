@@ -25,6 +25,17 @@ module Heroku
 
       # access_token is nil according to logs
       logger.debug("TRACER: sandwich ID: #{sandwich.id} response body #{resp.body}, status_code: #{resp.status}, sandwich token: #{sandwich.access_token} oauth_grant_code: #{sandwich.oauth_grant_code}")
+
+      resp = Excon.new('https://api.heroku.com').get(
+        path: "/apps/c259fc65-78f0-48b8-a54f-41916f3faa83",
+        headers: {
+          'Accept' => 'application/vnd.heroku+json; version=3',
+          'Authorization' => "Bearer #{sandwich.access_token}",
+          'Content-Type' => 'application/json',
+        }
+      )
+
+      logger.debug("TRACER Apps info: sandwich ID: #{sandwich.id} response body #{resp.body}, status_code: #{resp.status}, sandwich token: #{sandwich.access_token} oauth_grant_code: #{sandwich.oauth_grant_code}")
       render(
         json: {
           id: heroku_uuid,

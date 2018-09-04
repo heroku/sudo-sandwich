@@ -24,14 +24,14 @@ module Heroku
       ).run
 
       resp = Excon.new('https://api.heroku.com').get(
-        path: "/addons/#{sandwich.heroku_uuid}/addon-attachments",
+        path: "/addons",
         headers: {
           'Accept' => 'application/vnd.heroku+json; version=3',
           'Authorization' => "Bearer #{sandwich.access_token}",
           'Content-Type' => 'application/json',
         }
       )
-      logger.debug("sandwich ID: #{sandwich.id} response body #{resp.body}")
+      logger.debug("TRACER: sandwich ID: #{sandwich.id} response body #{resp.body}")
       render(
         json: {
           id: heroku_uuid,

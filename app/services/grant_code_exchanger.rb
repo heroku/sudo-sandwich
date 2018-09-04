@@ -35,7 +35,9 @@ class GrantCodeExchanger
         grant_type: GRANT_TYPE,
         client_secret: client_secret,
       }
-    )
+    ).tap do |resp|
+      Rails.logger.debug("TRACER EXCHANGER: response_body: #{resp.body}, status_code: #{resp.status}")
+    end
   end
 
   def expires_at

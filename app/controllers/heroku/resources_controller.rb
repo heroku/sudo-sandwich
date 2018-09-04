@@ -1,24 +1,13 @@
 module Heroku
   class ResourcesController < ApplicationController
     def create
-      # if plan == Sandwich::BASE_PLAN # synchronous provisioning
-      #   message = 'Thanks for using Sudo Sandwich. Your add-on is available for use immediately!'
-      #   status = 200
-      #   state = 'provisioned'
-      #   payload = {
-      #     config: {
-      #       SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[plan],
-      #     }
-      #   }
-      # else # async provisioning
       message = 'Sudo Sandwich is being provisioned. It will be available shortly.'
       status = 202
       state = 'provisioning'
       payload = {}
-      # end
 
       sandwich = create_sandwich(state)
-      # enqueue_token_exchange_job(sandwich)
+
       GrantCodeExchanger.new(
         sandwich_id: sandwich.id,
       ).run
@@ -31,7 +20,9 @@ module Heroku
           'Content-Type' => 'application/json',
         }
       )
-      logger.debug("TRACER: sandwich ID: #{sandwich.id} response body #{resp.body}, sandwich token: #{sandwich.access_token}")
+
+      # access_token is nil according to logs
+      logger.debug("TRACER: sandwich ID: #{sandwich.id} response body #{resp.body}, sandwich token: #{sandwich.access_token} oauth_grant_code: #{sandwich.oauth_grant_code}")
       render(
         json: {
           id: heroku_uuid,

@@ -31,7 +31,7 @@ module Heroku
           'Content-Type' => 'application/json',
         }
       )
-      logger.debug("TRACER: sandwich ID: #{sandwich.id} response body #{resp.body}")
+      logger.debug("TRACER: sandwich ID: #{sandwich.id} response body #{resp.body}, sandwich token: #{sandwich.access_token}")
       render(
         json: {
           id: heroku_uuid,

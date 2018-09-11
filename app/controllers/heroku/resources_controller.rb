@@ -7,7 +7,8 @@ module Heroku
         state = 'provisioned'
         payload = {
           config: {
-            SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[plan],
+            DJCPWICH_SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[plan],
+            DJCPWICH_SECOND_VAR: "from create"
           }
         }
       else # async provisioning
@@ -36,7 +37,8 @@ module Heroku
 
       render json: {
         config: {
-          SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[new_plan]
+          DJCPWICH_SUDO_SANDWICH_COMMAND: Sandwich::PLAN_CONFIG[new_plan],
+          DJCPWICH_SECOND_VAR: "from update"
         },
         message: "Successfully changed from #{original_plan} to #{new_plan}"
       }

@@ -30,8 +30,12 @@ class AsyncPlanProvisioner
       body: JSON.dump(
         config: [
           {
-            name: "SUDO_SANDWICH_COMMAND",
+            name: "DJCPWICH_SUDO_SANDWICH_COMMAND",
             value: Sandwich::PLAN_CONFIG[sandwich.plan],
+          },
+          {
+            name: "DJCPWICH_SECOND_VAR",
+            value: "from async"
           }
         ]
       )

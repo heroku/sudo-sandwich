@@ -16,6 +16,11 @@ gem 'attr_encrypted', '~> 3.0.0'
 gem 'delayed_job_active_record'
 gem 'excon'
 
+group :production do
+  gem 'rollbar'
+  gem 'sucker_punch'
+end
+
 group :development, :test do
   gem 'pry-rails'
 end

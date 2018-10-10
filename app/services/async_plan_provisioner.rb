@@ -34,7 +34,8 @@ class AsyncPlanProvisioner
             value: Sandwich::PLAN_CONFIG[sandwich.plan],
           }
         ]
-      )
+      ),
+      expects: 200..299
     )
   end
 
@@ -45,7 +46,8 @@ class AsyncPlanProvisioner
         'Accept' => 'application/vnd.heroku+json; version=3',
         'Authorization' => "Bearer #{access_token}",
         'Content-Type' => 'application/json',
-      }
+      },
+      expects: 200..299
     )
   end
 

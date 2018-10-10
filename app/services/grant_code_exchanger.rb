@@ -34,7 +34,8 @@ class GrantCodeExchanger
         code: sandwich.oauth_grant_code,
         grant_type: GRANT_TYPE,
         client_secret: client_secret,
-      }
+      },
+      expects: 200..299
     )
   end
 

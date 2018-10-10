@@ -21,7 +21,8 @@ class UsageReporter
       body: JSON.dump(
         timestamp: formatted_timestamp,
         usages: usages_json
-      )
+      ),
+      expects: 200..299
     )
   end
 

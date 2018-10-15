@@ -317,57 +317,67 @@ If you send invalid data, it is possible for it to silently fail.
 
 If you want to run your own add-on based on this codebase, you should follow these instructions. These instructions are for deploying your add-on to Heroku, which is not required. You may have to modify the deploy instructions for other environments.
 
-To start, you may wish to fork the codebase to your own private GitHub repo, so that you can make changes for your specific add-on's use case.
+To start, you may wish to fork the codebase to your own private GitHub repo, so that you can make changes for your specific add-on's use case. If you intend to do local development, see [Set up](#set-up).
 
-Create a Heroku app. Typically, we name the Heroku app after the slug (or commandline identifier) for the add-on. If I was creating an add-on with the slug of `sudo-sandwich`, I'd probably name the Heroku app `sudo-sandwich` as well. This is not required; and you can name it whatever you'd like. Please note that `sudo-sandwich` is already taken, and slugs are both immutable and must be globally unique!
+Create a Heroku app. Typically, we name the Heroku app after the slug (or command line identifier) for the add-on. If I was creating an add-on with the slug of `sudo-sandwich`, I'd probably name the Heroku app `sudo-sandwich` as well. This is not required; and you can name it whatever you'd like. Please note that `sudo-sandwich` is already taken, and slugs are both immutable and must be globally unique!
+
+Install the Heroku CLI, if you haven't already, [from the instructions for your platform](https://devcenter.heroku.com/articles/heroku-cli#download-and-install).
 
 ```
-heroku apps:create sudo-sandwich
+heroku apps:create your-app-slug
 ```
 
 You'll need a Heroku Postgresql database to store data in:
 
 ```
-heroku addons:create heroku-postgresql --app sudo-sandwich
+heroku addons:create heroku-postgresql --app your-app-slug
 ```
 
-**TODO** Instructions for deploy the code to Heroku go here.
+You will also want to scale the `worker` dyno up so that async provisioning can be handled in the background:
 
-Generate a manifest with the [addons-admin](https://github.com/heroku/heroku-cli-addons-admin) CLI plugin. See the linked repo for install instructions. After install, run `heroku addons:admin:manifest:generate` and follow the prompts.
+```
+heroku ps:scale worker=1 --app your-app-slug
+```
 
+Deploying the code to Heroku either [using git](https://devcenter.heroku.com/articles/git) or [the Heroku Dashboard with the GitHub integration](https://devcenter.heroku.com/articles/github-integration).
 
-Allow the `addons-admin` CLI plugin to generate a secret and SSO salt for you. It will save a new file called `addon-manifest.json`. You may need to edit this file to suit your local dev environment's port.
+Generate a manifest with the [addons-admin](https://github.com/heroku/heroku-cli-addons-admin) CLI plugin. (See the linked repo for plugin install instructions.) After install, run `heroku addons:admin:manifest:generate` and follow the prompts.
+
+Allow the `addons-admin` CLI plugin to generate a secret and SSO salt for you. It will save a new file called `addon-manifest.json`. Edit the `addon-manifest.json` to change the `"api.production.base_url"` and `"api.production.sso_url"` keys to point at your Heroku app. This might look like:
+
+```json
+    "production": {
+      "sso_url": "https://your-app-slug.herokuapp.com/sso/login",
+      "base_url": "https://your-app-slug.herokuapp.com/heroku/resources"
+    },
+```
+
+You may also need to edit this file to suit your local dev environment's port, inside the `"api.test.sso_url"` and `"api.test.base_url"` keys. For more details on editing this file, see the [Manifest](https://devcenter.heroku.com/articles/add-on-manifest) docs.
 
 Set secrets from the `addon-manifest.json` on your newly-created app under the following config vars:
 
 ```
-heroku config:set SLUG=<slug-from-manifest> PASSWORD=<password-from-manifest> SSO_SALT=<salt-from-manifest> --app sudo-sandwich
+heroku config:set SLUG=<slug-from-manifest> PASSWORD=<password-from-manifest> SSO_SALT=<salt-from-manifest> --app your-app-slug
 ```
 
 You'll also have to generate an encryption key for the database to store secrets with. In a Ruby terminal (pry or irb), run `require 'securerandom'; SecureRandom.hex(32)` to generate an encryption key of the appropriate length. Then set that key on the Heroku app:
 
 ```
-heroku config:set ENCRYPTION_KEY=<value-from-securerandom> --app sudo-sandwich
+heroku config:set ENCRYPTION_KEY=<value-from-securerandom> --app your-app-slug
 ```
 
-Once you've completed the above, you should be ready to push the manifest to the Heroku API:
+Once you've completed the above, you should be ready to push the manifest to the Heroku API. First, make sure that you've signed up at the [Partner Portal](https://addons-next.heroku.com) as an Add-on Partner. Then push your manifest up to the server:
 
 ```
 heroku addons:admin:manifest:push
 ```
 
-If that doesn't work, you'll need to sign up at the [Partner Portal](https://addons-next.heroku.com) as an Add-on Partner.
+You will need to go to the [Partner Portal](https://addons-next.heroku.com) and add [plans](https://github.com/heroku/sudo-sandwich/blob/master/app/models/sandwich.rb#L2-L8) to your add-on based on the hardcoded values in the `Sandwich` class. You may wish to modify these and deploy the changes, for example, to create a plan called `async` for testing async provisioning.
 
-You will also want to scale the `worker` dyno up so that async provisioning can be handled in the background:
-
-```
-heroku ps:scale worker=1 --app sudo-sandwich
-```
-
-You will need to go to the [Partner Portal](https://addons-next.heroku.com) and add [plans](https://github.com/heroku/sudo-sandwich/blob/master/app/models/sandwich.rb#L2-L8) to your add-on based on the hardcoded values in the `Sandwich` class. You may wish to modify these, for example, to create a plan called `async` for testing async provisioning.
-
-The [building an add-on](https://devcenter.heroku.com/articles/building-an-add-on) guide and [manifest](https://devcenter.heroku.com/articles/add-on-manifest) docs have more info on developing an add-on, and the implementation of each feature in Sudo Sandwich can be see above in this document.
+The [Building an Add-on](https://devcenter.heroku.com/articles/building-an-add-on) guide and [Manifest](https://devcenter.heroku.com/articles/add-on-manifest) docs have more info on developing an add-on, and the implementation of each feature in Sudo Sandwich can be see above in this document.
 
 ### Staging add-on
 
-Often, you'll want an add-on instance to test changes on. We call this the 'staging add-on' unofficially, and it still runs in a 'production' environment on Heroku. Typically, you create another add-on based on instructions above, but with `-staging` appended to the slug. **TODO**: finish this section
+Often, you'll want an add-on instance to test changes on. We call this the 'staging add-on' unofficially, and it still runs in a 'production' environment on Heroku. Typically, you create another add-on based on instructions above, but with `-staging` appended to the slug. We keep back this add-on in alpha, which keeps it hidden. As the add-on partner, you can provision this add-on while customers cannot, which gives you a way to test changes to your add-on before deploying them to the real, production add-on slug.
+
+For more best practices, see the [Add-on Partner Technical Best Practices](https://devcenter.heroku.com/articles/add-on-partner-technical-best-practices) guide.

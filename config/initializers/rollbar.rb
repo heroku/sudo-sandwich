@@ -3,7 +3,8 @@ require 'rollbar/rails'
 Rollbar.configure do |config|
   config.access_token = ENV['ROLLBAR_ACCESS_TOKEN']
 
-  # Here we'll disable in 'test' and dev:
+  # Here we'll disable in test and dev, since it enables in all environments by
+  # default
   if !Rails.env.production?
     config.enabled = false
   end

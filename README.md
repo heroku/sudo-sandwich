@@ -313,7 +313,7 @@ reported properly.
 *NOTE*: the current implementation does not handle all edge cases at this time.
 If you send invalid data, it is possible for it to silently fail.
 
-## Creating a fork on Heroku
+## How to fork this add-on to create your own SudoSandwich instance on Heroku
 
 If you want to run your own add-on based on this codebase, you should follow these instructions. These instructions are for deploying your add-on to Heroku, which is not required. You may have to modify the deploy instructions for other environments.
 

@@ -15,6 +15,8 @@ gem 'dotenv-rails'
 gem 'attr_encrypted', '~> 3.0.0'
 gem 'delayed_job_active_record'
 gem 'excon'
+gem 'rollbar'
+gem 'sucker_punch'
 
 group :development, :test do
   gem 'pry-rails'

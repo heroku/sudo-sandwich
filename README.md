@@ -414,6 +414,9 @@ You'll also have to generate an encryption key for the database to store secrets
 heroku config:set ENCRYPTION_KEY=<value-from-securerandom> --app your-app-slug
 ```
 
+You'll also need to set the encryption key for local development. Make sure you've run `bin/setup` and edit `.env`
+'s `ENCRYPTION_KEY` field.
+
 Once you've completed the above, you should be ready to push the manifest to the Heroku API. First, make sure that you've signed up at the [Partner Portal](https://addons-next.heroku.com) as an Add-on Partner. Then push your manifest up to the server:
 
 ```

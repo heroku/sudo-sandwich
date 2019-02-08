@@ -7,7 +7,9 @@ class ExchangeGrantTokenJob < ApplicationJob
     ).run
 
     if sandwich(sandwich_id).not_provisioned?
-      ProvisionPlanJob.perform_later(sandwich_id: sandwich_id)
+      unless ENV.has_key?('SKIP_ASYNC_FINALIZATION')
+        ProvisionPlanJob.perform_later(sandwich_id: sandwich_id)
+      end
     end
   end
 

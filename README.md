@@ -189,6 +189,16 @@ deprovisioned after around 12 hours.
 Both endpoints use the `heroku_uuid` value to uniquely identify an add-on
 resource.
 
+To make testing some provisioning scenarios easier, you can disable setting a
+`provisioning` add-on to `provisioned` via the `SKIP_ASYNC_FINALIZATION` env
+var. If you set `SKIP_ASYNC_FINALIZATION` to any value, we won't enqueue the
+[`ProvisionPlanJob`](app/jobs/provision_plan_job.rb), which finalizes async
+provisioning. This will leave async add-on installations in a `provisioning`
+state, allowing you to experiment and test platform behavior more easily.
+
+Remember that add-ons in the `provisioning` state will be deprovisioned
+automatically by the Heroku platform after around 12 hours.
+
 ## Grant code exchange
 
 ### Heroku docs
@@ -483,15 +493,3 @@ while customers cannot, which gives you a way to test changes to your add-on
 For more best practices, see the [Add-on Partner Technical Best
 Practices](https://devcenter.heroku.com/articles/add-on-partner-technical-best-practices)
 guide.
-
-### Configuration options
-
-To make testing some provisioning scenarios easier, you can disable setting a
-`provisioning` add-on to `provisioned` via the `SKIP_ASYNC_FINALIZATION` env
-var. If you set `SKIP_ASYNC_FINALIZATION` - to any value - we won't enqueue the
-job that finalizes async provisioning. This will leave async add-on
-installations in a `provisioning` state, allowing you to experiment and test
-platform behavior more easily.
-
-Remember that add-ons in the `provisioning` state will be deprovisioned
-automatically by the Heroku platform after around 12 hours.

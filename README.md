@@ -402,17 +402,18 @@ You'll need a Heroku Postgresql database to store data in:
 heroku addons:create heroku-postgresql --app your-app-slug
 ```
 
+Deploy the code to Heroku either
+[using git](https://devcenter.heroku.com/articles/git)
+or
+[the Heroku Dashboard with the GitHub integration](https://devcenter.heroku.com/articles/github-integration).
+(Under the application, Deploy tab >> Manual Deploy)
+
 You will also want to scale the `worker` dyno up so that async provisioning can
 be handled in the background:
 
 ```
 heroku ps:scale worker=1 --app your-app-slug
 ```
-
-Deploy the code to Heroku either
-[using git](https://devcenter.heroku.com/articles/git)
-or
-[the Heroku Dashboard with the GitHub integration](https://devcenter.heroku.com/articles/github-integration).
 
 Generate a manifest with the
 [addons-admin](https://github.com/heroku/heroku-cli-addons-admin) CLI plugin.

@@ -1,20 +1,19 @@
 source 'https://rubygems.org'
 
-ruby "~> 2.5.1"
+ruby '~> 2.6.5'
 
 git_source(:github) do |repo_name|
-  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
   "https://github.com/#{repo_name}.git"
 end
 
-
-gem 'rails', '~> 5.2.1'
-gem 'pg'
-gem 'puma', '~> 3.7'
-gem 'dotenv-rails'
 gem 'attr_encrypted', '~> 3.0.0'
 gem 'delayed_job_active_record'
+gem 'dotenv-rails'
 gem 'excon'
+gem 'pg'
+gem 'puma', '~> 3.7'
+gem 'rails', '~> 5.2.1'
 gem 'rollbar'
 gem 'sucker_punch'
 
@@ -27,9 +26,9 @@ group :development do
 end
 
 group :test do
-  gem 'rspec-rails', '~> 3.6'
   gem 'rails-controller-testing'
+  gem 'rspec-rails', '~> 3.6'
   gem 'sinatra'
-  gem 'webmock'
   gem 'timecop'
+  gem 'webmock'
 end

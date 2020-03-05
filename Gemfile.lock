@@ -65,7 +65,7 @@ GEM
       railties (>= 3.2, < 6.0)
     encryptor (3.0.0)
     erubi (1.7.1)
-    excon (0.62.0)
+    excon (0.71.0)
     ffi (1.9.25)
     globalid (0.4.1)
       activesupport (>= 4.2.0)

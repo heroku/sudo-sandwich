@@ -69,7 +69,7 @@ After cloning this repo, run: `bin/setup`.
 
 ### Local Server
 
-* Run the server(s): `bin/rails start`
+* Run the server(s): `bin/rails server`
 * Visit [your local server](http://localhost:3000)
 * Run tests: `rake`
 

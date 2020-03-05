@@ -100,7 +100,7 @@ GEM
     pry-rails (0.3.6)
       pry (>= 0.10.4)
     public_suffix (3.0.2)
-    puma (3.12.0)
+    puma (3.12.4)
     rack (2.0.6)
     rack-protection (2.0.3)
       rack
@@ -209,7 +209,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-   ruby 2.5.1p57
+   ruby 2.6.5p114
 
 BUNDLED WITH
-   1.16.6
+   1.17.3

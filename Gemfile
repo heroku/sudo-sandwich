@@ -8,12 +8,12 @@ git_source(:github) do |repo_name|
 end
 
 gem 'attr_encrypted', '~> 3.0.0'
-gem 'delayed_job_active_record'
-gem 'dotenv-rails'
+gem 'delayed_job_active_record', '>= 4.1.5'
+gem 'dotenv-rails', '>= 2.7.6'
 gem 'excon'
 gem 'pg'
-gem 'puma', '~> 3.12'
-gem 'rails', '~> 5.2.4.3'
+gem 'puma', '~> 4.3', '>= 4.3.12'
+gem 'rails', '~> 6.1.7.3'
 gem 'rollbar'
 gem 'sucker_punch'
 
@@ -27,8 +27,8 @@ end
 
 group :test do
   gem 'rails-controller-testing'
-  gem 'rspec-rails', '~> 3.6'
-  gem 'sinatra'
+  gem 'rspec-rails', '~> 3.9', '>= 3.9.0'
+  gem 'sinatra', '>= 2.2.3'
   gem 'timecop'
   gem 'webmock'
 end

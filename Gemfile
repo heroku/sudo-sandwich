@@ -13,7 +13,7 @@ gem 'dotenv-rails'
 gem 'excon'
 gem 'pg'
 gem 'puma', '~> 3.12'
-gem 'rails', '~> 5.2.4.3'
+gem 'rails', '~> 7.1.0.0'
 gem 'rollbar'
 gem 'sucker_punch'
 

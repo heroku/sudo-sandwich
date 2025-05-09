@@ -13,7 +13,7 @@ gem 'dotenv-rails'
 gem 'excon'
 gem 'pg'
 gem 'puma', '~> 3.12'
-gem 'rails', '~> 5.2.4.3'
+gem 'rails', '~> 7.0.0.0'
 gem 'rollbar'
 gem 'sucker_punch'
 
@@ -28,7 +28,7 @@ end
 group :test do
   gem 'rails-controller-testing'
   gem 'rspec-rails', '~> 3.6'
-  gem 'sinatra'
+  gem 'sinatra', '>= 4.0.0'
   gem 'timecop'
   gem 'webmock'
 end

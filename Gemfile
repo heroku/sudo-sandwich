@@ -8,12 +8,12 @@ git_source(:github) do |repo_name|
 end
 
 gem 'attr_encrypted', '~> 3.0.0'
-gem 'delayed_job_active_record'
+gem 'delayed_job_active_record', '>= 4.1.7'
 gem 'dotenv-rails'
 gem 'excon'
 gem 'pg'
 gem 'puma', '~> 3.12'
-gem 'rails', '~> 5.2.4.3'
+gem 'rails', '~> 7.1.5.2'
 gem 'rollbar'
 gem 'sucker_punch'
 

@@ -9,11 +9,11 @@ end
 
 gem 'attr_encrypted', '~> 3.0.0'
 gem 'delayed_job_active_record'
-gem 'dotenv-rails'
+gem 'dotenv-rails', '>= 2.7.6'
 gem 'excon'
 gem 'pg'
 gem 'puma', '~> 3.12'
-gem 'rails', '~> 5.2.4.3'
+gem 'rails', '~> 5.2.4.4'
 gem 'rollbar'
 gem 'sucker_punch'
 
@@ -26,9 +26,9 @@ group :development do
 end
 
 group :test do
-  gem 'rails-controller-testing'
-  gem 'rspec-rails', '~> 3.6'
-  gem 'sinatra'
+  gem 'rails-controller-testing', '>= 1.0.5'
+  gem 'rspec-rails', '~> 3.9', '>= 3.9.1'
+  gem 'sinatra', '>= 2.1.0'
   gem 'timecop'
   gem 'webmock'
 end

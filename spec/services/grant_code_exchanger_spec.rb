@@ -28,5 +28,16 @@ RSpec.describe GrantCodeExchanger do
         expect(sandwich.reload.access_token_expires_at).to be_within(0.01.second).of expires_time
       end
     end
+    it 'sends credentials in the POST body, not the query string' do
+      sandwich = Sandwich.create!(heroku_uuid: 'some-uuid', plan: 'test', oauth_grant_code: 'some-grant-code')
+
+      GrantCodeExchanger.new(sandwich_id: sandwich.id, client_secret: 'some-secret').run
+
+      expect(
+        a_request(:post, 'https://id.heroku.com/oauth/token')
+          .with(body: { code: 'some-grant-code', grant_type: 'authorization_code', client_secret: 'some-secret' })
+      ).to have_been_made
+      expect(a_request(:post, /id\.heroku\.com\/oauth\/token\?/)).not_to have_been_made
+    end
   end
 end

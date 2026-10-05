@@ -36,5 +36,16 @@ RSpec.describe AccessTokenRefresher do
         expect(sandwich.reload.access_token_expires_at).to be_within(0.01.second).of expires_time
       end
     end
+    it 'sends credentials in the POST body, not the query string' do
+      sandwich = Sandwich.create!(heroku_uuid: 'some-uuid', plan: 'test', refresh_token: 'some-refresh-token')
+
+      AccessTokenRefresher.new(sandwich_id: sandwich.id, client_secret: 'some-secret').run
+
+      expect(
+        a_request(:post, 'https://id.heroku.com/oauth/token')
+          .with(body: { refresh_token: 'some-refresh-token', grant_type: 'refresh_token', client_secret: 'some-secret' })
+      ).to have_been_made
+      expect(a_request(:post, /id\.heroku\.com\/oauth\/token\?/)).not_to have_been_made
+    end
   end
 end

@@ -29,11 +29,12 @@ class AccessTokenRefresher
   def response
     Excon.new(BASE_URL).post(
       path: "/oauth/token",
-      query: {
+      headers: { "Content-Type" => "application/x-www-form-urlencoded" },
+      body: URI.encode_www_form(
         refresh_token: sandwich.refresh_token,
         grant_type: GRANT_TYPE,
         client_secret: client_secret,
-      }
+      )
     )
   end
 
